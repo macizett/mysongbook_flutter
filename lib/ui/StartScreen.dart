@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:mysongbook_flutter/data/ViewModel.dart';
+import 'package:mysongbook_flutter/data/Verse.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class StartScreen extends StatefulWidget {
+  const StartScreen({super.key});
+
+  @override
+  State<StartScreen> createState() => _StartScreenState();
+}
+
+class _StartScreenState extends State<StartScreen> {
+  late Verse? currentVerse;
+
+  @override
+  void initState() {
+    super.initState();
+    currentVerse = ViewModel.getVerse();
+  }
+
+  void _refreshVerse() {
+    setState(() {
+      currentVerse = ViewModel.getVerse();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +30,6 @@ class MainScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // ViewPager equivalent
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -19,16 +39,14 @@ class MainScreen extends StatelessWidget {
                   right: 48,
                 ),
                 child: PageView(
-                  // Add your pages here
+                  children: const [
+                  ], // Add your pages here
                 ),
               ),
             ),
-
-            // Verse Layout
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Top Line
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Container(
@@ -37,13 +55,12 @@ class MainScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-
-                // Verse Text
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: InkWell(
+                    onTap: _refreshVerse,
                     child: Text(
-                      '', // Your verse text
+                      currentVerse?.text ?? 'Loading...',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 16,
@@ -51,20 +68,15 @@ class MainScreen extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onTap: () {}, // Add your click handler
                   ),
                 ),
                 const SizedBox(height: 6),
-
-                // Verse Place
                 Text(
-                  '', // Your verse place
+                  currentVerse?.place ?? '',
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 12),
                 ),
                 const SizedBox(height: 8),
-
-                // Bottom Line
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Container(
@@ -73,43 +85,31 @@ class MainScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-
-                // App Name
-                Text(
-                  'MSB', // Replace with your app name
+                const Text(
+                  'MYSONGBOOK',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.4,
                   ),
                 ),
                 const SizedBox(height: 12),
-
-                // Final Line
                 Container(
                   height: 1,
                   color: const Color(0x1E001F2A),
                 ),
               ],
             ),
-
-            // Bottom Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton.icon(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(color: Color(0xFF888686)),
-                  ),
                   icon: const Icon(Icons.settings, size: 30),
                   label: const Text('Ustawienia'),
                   onPressed: () {},
                 ),
                 TextButton.icon(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(color: Color(0xFF888686)),
-                  ),
                   icon: const Icon(Icons.report, size: 30),
                   label: const Text('Zgłoś'),
                   onPressed: () {},
